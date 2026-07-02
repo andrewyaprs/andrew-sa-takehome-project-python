@@ -16,7 +16,7 @@ To simplify this project, we're also not using any database here, either. Instea
 To get started, clone the repository
 
 ```
-git clone https://github.com/andrewyaprs/andrew-sa-takehome-project-python && cd sa-takehome-project-python
+git clone https://github.com/andrewyaprs/andrew-sa-takehome-project-python && cd andrew-sa-takehome-project-python
 ```
 
 Set up a virtual environment:
