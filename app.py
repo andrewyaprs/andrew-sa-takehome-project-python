@@ -6,6 +6,9 @@ from flask import Flask, request, render_template
 
 load_dotenv()
 
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+
 app = Flask(__name__,
   static_url_path='',
   template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), "views"),
@@ -38,12 +41,32 @@ def checkout():
     # Included in layout view, feel free to assign error
     error = 'No item selected'
 
-  return render_template('checkout.html', title=title, amount=amount, error=error)
+# Create a PaymentIntent for the selected item using POST /v1/payment_intents
+  payment_intent = stripe.PaymentIntent.create(
+    amount=amount,
+    currency="usd"
+  )
+
+  return render_template('checkout.html', 
+                         title=title, 
+                         amount=amount, 
+                         error=error,
+                         client_secret=payment_intent['client_secret'],
+                         publishable_key=STRIPE_PUBLISHABLE_KEY
+                         )
 
 # Success route
 @app.route('/success', methods=['GET'])
 def success():
-  return render_template('success.html')
+  #Stripe appends PaymentIntent id to the return url on redirect, retrieving id from query string
+  payment_intent_id = request.args.get('payment_intent')
+  #Retrieve full PaymentIntent details from Stripe using GET /v1/payment_intents/:id
+  payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+
+  return render_template('success.html',
+                         amount = payment_intent['amount'],
+                         payment_intent_id = payment_intent['id']
+                         )
 
 
 if __name__ == '__main__':
