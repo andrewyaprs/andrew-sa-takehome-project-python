@@ -52,6 +52,8 @@ Once redirected to the success page, you will find both the amount charged and p
 
 Feel free to also test with other card numbers that trigger errors (e.g. 4000 0000 0000 0002 for a generic card decline), you will notice inline error messages and validation appear right on the checkout form. This is a good demonstration of how Stripe absorbs the complexity of handling these edge cases so customer's do not have to build and maintain custom error-handling logic for every scenario. Freeing up more developer resources for strategic initiatives.
 
+*If you are on a mac machine and run into a 403 error upon clicking pay on the checkout page, this could likely be due to AirPlay Receiver running a background service listening on port 5000. You can either temporarily switch off AirPlay Receiver or you can access http://127.0.0.1:5000 instead.
+
 ## How does the solution work
 
 This app uses Stripe's [Payment Intents API](https://docs.stripe.com/api/payment_intents?architecture-style=resources) paired with the [Payment Element](https://docs.stripe.com/payments/payment-element) UI component to collect and confirm card payments. 
